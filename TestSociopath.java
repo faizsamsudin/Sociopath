@@ -8,6 +8,7 @@ package sociopath;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
  * 
@@ -233,7 +234,7 @@ public class TestSociopath {
     /**
      * 1. get the number to be generated
      * 2. generate integer (maximum 35cm) with integer count
-     * 3. 
+     * 3. Stack part
      */
     public static void event4(){
         System.out.println("Event 4\n");
@@ -242,13 +243,78 @@ public class TestSociopath {
         int num = s.nextInt();  //1. get the number to be generated
         ArrayList<Integer> listOfNum = new ArrayList<>();
         
-        Random r = new Random();
-        for (int i = 0; i < num; i++) {
-            listOfNum.add(r.nextInt(35));
-        }
+//        Random r = new Random();
+//        for (int i = 0; i < num; i++) {
+//            listOfNum.add(r.nextInt(25)+10);
+//        }
+        listOfNum.add(3);
+        listOfNum.add(1);
+        listOfNum.add(10);
+        listOfNum.add(7);
+        listOfNum.add(3);
+        listOfNum.add(5);
+        listOfNum.add(6);
+        listOfNum.add(6);
         
         System.out.println("Books' height: " + listOfNum);
         
+        Stack<Integer> A = new Stack<>();
+        Stack<Integer> B = new Stack<>();
+        int counter = 0;
         
+        //push into A all books' height
+        for (int i = listOfNum.size()-1; i > -1; i--) {
+            A.push(listOfNum.get(i));
+        }
+        
+        //operation to discard bigger book
+        ArrayList<Integer> toCheck = new ArrayList<>();
+        while(A.peek() != null){
+            System.out.println("push to B: "+A.peek());
+            B.push(A.pop());
+            System.out.println("A: "+A);
+            System.out.println("B: "+B);
+            if (A.peek() > B.peek()) {
+                System.out.println("discard: "+A.peek());
+                A.pop();
+//                if (A.peek() != null) {
+//                    toCheck.add(A.peek());
+//                    System.out.println("push B: "+A.peek());
+//                    B.push(A.pop());
+//                }
+            }
+            counter++;
+        }
+//        while(true){
+//            while(A.peek() != null){
+//                B.push(A.pop());
+//                System.out.println("A.peek(): "+A.peek());
+//                System.out.println("B.peek(): "+B.peek());
+//                if (A.peek() > B.peek()) {
+//                    A.pop();
+//                    toCheck.add(A.peek());
+//                    B.push(A.pop());
+//                }
+//                counter++;
+//            }
+//            if (isIncreasing(toCheck)) {
+//                while(B.peek() != null){
+//                    A.push(B.pop());
+//                }
+//                toCheck.clear();
+//            }
+//            else
+//                System.out.println("break");
+//                break;
+//        }
+    }
+    
+    public static boolean isIncreasing(ArrayList<Integer> list){
+        for (int i = 0; i < list.size()-1; i++) {
+            if (list.get(i)>list.get(i+1)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
