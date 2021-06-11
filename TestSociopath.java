@@ -85,7 +85,10 @@ public class TestSociopath {
         event3();
         System.out.println("");
         
-        event4();
+//        event4();
+//        System.out.println("");
+
+        event5();
         System.out.println("");
     }
     
@@ -215,7 +218,7 @@ public class TestSociopath {
         else{
             for (int i = 0; i < clash.size()-1; i++) {
                 if(clash.get(i).getDivingRate() > clash.get(i+1).getDivingRate()){   //get the lowest diving rate
-                    lunchWith = clash.get(i);
+                    lunchWith = clash.get(i+1);
                 }
             }
         }
@@ -316,5 +319,33 @@ public class TestSociopath {
             }
         }
         return false;
+    }
+    
+    /**
+     * 1. find the one who starts the rumor
+     * - not in mc's cluster (hence, not mc's friends' friends)
+     * 
+     */
+    public static void event5(){
+        System.out.println("Event 5");
+        
+        // 1. finding the one who starts the rumor
+        Student rumor;
+        Student crush;
+        do {
+            Random random = new Random();
+                int forRumor;
+                int forCrush;
+            do {
+                forRumor = random.nextInt(sociopath.size);
+                forCrush = random.nextInt(sociopath.size);
+            } while (forRumor == forCrush);
+            rumor = sociopath.getStudent(forRumor);
+            crush = sociopath.getStudent(forCrush);
+        } while (sociopath.isFriends(mc.getName(), crush.getName()) || sociopath.isFriends(mc.getName(), rumor.getName()) || (rumor==mc) || (crush==mc) || (rumor==crush) || sociopath.isFriends(crush.getName(), rumor.getName()));
+        System.out.println("mc n rumor friends? " + sociopath.isFriends(mc.getName(), rumor.getName()));
+        System.out.println("mc n crush friends? " + sociopath.isFriends(mc.getName(), crush.getName()));
+        System.out.println("rumor: " + rumor.getName());
+        System.out.println("crush: " + crush.getName());
     }
 }
