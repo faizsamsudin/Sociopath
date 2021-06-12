@@ -308,4 +308,51 @@ public class SociopathGraph{
         }
         return null;
     }
+    
+    public boolean hasPath(String fromVertex, String toVertex) {
+        if (head == null)   //if graph is empty
+            return false;   //cus nothing to be checked
+        if (isFriends(fromVertex, toVertex)) {
+            return true;
+        }
+        
+        //1. traversing through the vertices to set pointer on sourceVertex
+        Vertex currentVertex = head;  //establish a pointer to traverse to desired sourceVertex
+        while (currentVertex != null) { //traverse the vertex nodes...
+            if (currentVertex.vertexInfo.getName().compareTo(fromVertex) == 0) {   //...until it reaches the desired A Vertex
+                
+                //2. traversing through the vertices to set pointer on BVertex
+                Vertex currentToVertex = head; //establish pointer to traverse to desired B Vertex
+                while (currentToVertex != null) {
+                    if (currentToVertex.vertexInfo.getName().compareTo(Binfo) == 0) {
+                        
+                        //3. makes a new edge to be put as firstEdge of A Vertex
+                        Edge currentEdgeA = currentVertex.firstEdge;    //highlight the first edge of the A vertex
+                        Edge newEdgeA = new Edge(currentToVertex, BrateA, currentEdgeA);   //attach currentEdge(firstEdge of A Vertex) as next edge, now newEdgeA be the firstEdge
+                        
+                        currentVertex.firstEdge = newEdgeA;   //make newEdge as firstEdge of A Vertex
+                        currentVertex.outdeg++;
+                        currentToVertex.indeg++;
+                        
+                        //4. makes a new edge to attached as firstEdge of B Vertex
+                        Edge currentEdgeB = currentToVertex.firstEdge;    //highlight the first edge of the B vertex
+                        Edge newEdgeB = new Edge(currentVertex, ArateB, currentEdgeB);   //attach currentEdge(firstEdge of B Vertex) as next edge, now newEdgeB be the firstEdge
+                        
+                        currentToVertex.firstEdge = newEdgeB;   //make newEdgeB as firstEdge of B Vertex
+                        currentToVertex.outdeg++;
+                        currentVertex.indeg++;
+                        
+                        return true;    //return true when mission succeeded
+                    }
+                    
+                    currentToVertex = currentToVertex.nextVertex; //part of traversing to find destVertex
+                }
+            }
+            
+            currentVertex = currentVertex.nextVertex; //part of traversing to find sourceVertex
+        }
+        return false;   //when mission failed successfully, returning false hope to my country
+        
+        return false;
+    }
 }

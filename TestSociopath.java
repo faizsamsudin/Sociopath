@@ -204,12 +204,10 @@ public class TestSociopath {
         Student lunchWith = new Student();
         
         
-        for (int i = 0; i < friendsMC.size(); i++) {
-            if (mc.clashLunch(friendsMC.get(i))) {
-                //System.out.println("here");
+        for (int i = 0; i < friendsMC.size(); i++) {    //loop through mc'friends
+            if (mc.clashLunch(friendsMC.get(i))) {  //if clash lunch time insert the student into clash arraylist
                 clash.add(friendsMC.get(i));
             }
-            //System.out.println("mari2");
         }
         if (clash.size() == 1) {
             //System.out.println("here2");
@@ -322,9 +320,12 @@ public class TestSociopath {
     }
     
     /**
-     * 1. find the one who starts the rumor
+     * 1. find the one who starts the rumor and who crush
      * - not in mc's cluster (hence, not mc's friends' friends)
-     * 
+     * 2. rumor finding its path to crush
+     * - if rumors tak jumpa crush, return
+     * 3. mc finding its way to crush
+     * 4. if (2) berjalan && mc cannot find its path to crush == return
      */
     public static void event5(){
         System.out.println("Event 5");
@@ -347,5 +348,9 @@ public class TestSociopath {
         System.out.println("mc n crush friends? " + sociopath.isFriends(mc.getName(), crush.getName()));
         System.out.println("rumor: " + rumor.getName());
         System.out.println("crush: " + crush.getName());
+        
+        // 2. rumor finding its path to crush
+        // if rumors tak jumpa crush, return
+        
     }
 }
