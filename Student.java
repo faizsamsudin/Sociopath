@@ -62,15 +62,13 @@ public class Student implements Comparable<Student>{
         this.friendsList = friendsList;
     }
     
-    
-    
     /**
      * check whether lunchtime of this student clash or not with toCheck student
      * @param Student toCheck
      * @return clash lunch time or not
      */
     public boolean clashLunch(Student toCheck){
-        if (endLunch < toCheck.getLunchTime() || lunchTime < toCheck.getEndLunch()) {
+        if (endLunch > toCheck.getLunchTime() || lunchTime < toCheck.getEndLunch()) {
             return true;
         }
         return false;

@@ -6,6 +6,7 @@
 package sociopath;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,21 +14,45 @@ import java.util.ArrayList;
  */
 public class SociopathGraph{
     
-    protected class Vertex{    //T usually in String (to store name), N usually in integer-Weight (to store weight of the vertex)
-        protected Student vertexInfo;
-        protected int indeg,outdeg;
-        protected Vertex nextVertex;
-        protected Edge firstEdge;
+    public class Vertex{    //T usually in String (to store name), N usually in integer-Weight (to store weight of the vertex)
+        private Student vertexInfo;
+        private int indeg,outdeg;
+        private Vertex nextVertex;
+        private Edge firstEdge;
+        private boolean visited;
+        private List<Vertex> neighbourList;
 
         public Vertex(Student vertexInfo, Vertex nextVertex) {
             this.vertexInfo = vertexInfo;
             this.nextVertex = nextVertex;
+            this.neighbourList = new ArrayList<>();
         }
 
         public Vertex(Student vertexInfo, Vertex nextVertex, Edge firstEdge) {
             this.vertexInfo = vertexInfo;
             this.nextVertex = nextVertex;
             this.firstEdge = firstEdge;
+            this.neighbourList = new ArrayList<>();
+        }
+        
+        public boolean isVisited(){
+            return visited;
+        }
+        
+        public void setVisited(boolean visited){
+            this.visited = visited;
+        }
+        
+        public void addNeighbour(Vertex vertex){
+            this.neighbourList.add(vertex);
+        }
+        
+        public List<Vertex> getNeighbourList(){
+            return this.neighbourList;
+        }
+        
+        public String toString(){
+            return vertexInfo.getName();
         }
     }
     
@@ -169,6 +194,22 @@ public class SociopathGraph{
         return currentVertex.vertexInfo;
     }
     
+    public Vertex getVertex(String studentName){
+        if (head == null) {
+            return null;  //not found
+        }
+        
+        //traversing through the vertices, through all the vertices' edges
+        Vertex currentVertex = head;  //establish a pointer to traverse throughout vertices
+        while (currentVertex != null) { //traverse the vertex nodes...
+            if (currentVertex.vertexInfo.getName().compareTo(studentName) == 0) {
+                return currentVertex;
+            }
+            currentVertex = currentVertex.nextVertex;   //pointer pointing to next vertex
+        }
+        return null;   //return null when there's no requested vertex name in the graph
+    }
+    
     public int getEdge(String rated, String rater){
         if (head == null) {
             return -100;  //not found
@@ -228,7 +269,9 @@ public class SociopathGraph{
                 Edge currentEdge = currentVertex.firstEdge;   //establish a pointer to traverse througout the edges of currentVertex
                 while (currentEdge != null) {
                     if (currentEdge.toVertex.vertexInfo.getName().compareTo(rater) == 0) {
+                        //System.out.println("Current Weight: " + currentEdge.getWeight());
                         currentEdge.addWeight(increment);
+                        //System.out.println("After increment: " + currentEdge.getWeight());
                         return true;
                     }
                     currentEdge = currentEdge.nextEdge;    //pointer pointing to next edge
@@ -263,6 +306,7 @@ public class SociopathGraph{
                         Avertex.firstEdge = newEdgeA;   //make newEdge as firstEdge of A Vertex
                         Avertex.outdeg++;
                         Bvertex.indeg++;
+                        Avertex.addNeighbour(Bvertex);
                         
                         //4. makes a new edge to attached as firstEdge of B Vertex
                         Edge currentEdgeB = Bvertex.firstEdge;    //highlight the first edge of the B vertex
@@ -271,6 +315,7 @@ public class SociopathGraph{
                         Bvertex.firstEdge = newEdgeB;   //make newEdgeB as firstEdge of B Vertex
                         Bvertex.outdeg++;
                         Avertex.indeg++;
+                        Bvertex.addNeighbour(Avertex);
                         
                         return true;    //return true when mission succeeded
                     }
@@ -309,6 +354,21 @@ public class SociopathGraph{
         return null;
     }
     
+    public ArrayList<Vertex> getAllVertices(){
+        if (head == null) {
+            return null;
+        }
+        
+        ArrayList<Vertex> toReturn = new ArrayList<>();
+        Vertex currentVertex = head;
+        while(currentVertex!=null){ //traversing the vertices
+            toReturn.add(currentVertex);
+            currentVertex = currentVertex.nextVertex;
+        }
+        
+        return toReturn;
+    }
+    
     public boolean hasPath(String fromVertex, String toVertex) {
         if (head == null)   //if graph is empty
             return false;   //cus nothing to be checked
@@ -324,25 +384,8 @@ public class SociopathGraph{
                 //2. traversing through the vertices to set pointer on BVertex
                 Vertex currentToVertex = head; //establish pointer to traverse to desired B Vertex
                 while (currentToVertex != null) {
-                    if (currentToVertex.vertexInfo.getName().compareTo(Binfo) == 0) {
+                    if (currentToVertex.vertexInfo.getName().compareTo(toVertex) == 0) {
                         
-                        //3. makes a new edge to be put as firstEdge of A Vertex
-                        Edge currentEdgeA = currentVertex.firstEdge;    //highlight the first edge of the A vertex
-                        Edge newEdgeA = new Edge(currentToVertex, BrateA, currentEdgeA);   //attach currentEdge(firstEdge of A Vertex) as next edge, now newEdgeA be the firstEdge
-                        
-                        currentVertex.firstEdge = newEdgeA;   //make newEdge as firstEdge of A Vertex
-                        currentVertex.outdeg++;
-                        currentToVertex.indeg++;
-                        
-                        //4. makes a new edge to attached as firstEdge of B Vertex
-                        Edge currentEdgeB = currentToVertex.firstEdge;    //highlight the first edge of the B vertex
-                        Edge newEdgeB = new Edge(currentVertex, ArateB, currentEdgeB);   //attach currentEdge(firstEdge of B Vertex) as next edge, now newEdgeB be the firstEdge
-                        
-                        currentToVertex.firstEdge = newEdgeB;   //make newEdgeB as firstEdge of B Vertex
-                        currentToVertex.outdeg++;
-                        currentVertex.indeg++;
-                        
-                        return true;    //return true when mission succeeded
                     }
                     
                     currentToVertex = currentToVertex.nextVertex; //part of traversing to find destVertex
@@ -352,7 +395,5 @@ public class SociopathGraph{
             currentVertex = currentVertex.nextVertex; //part of traversing to find sourceVertex
         }
         return false;   //when mission failed successfully, returning false hope to my country
-        
-        return false;
     }
 }

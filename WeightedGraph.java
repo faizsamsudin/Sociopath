@@ -7,8 +7,9 @@ package sociopath;
  */
 
 /**
- *
+ *  
  * @author Lidros
+ * THIS IS NOT RELATED DIRECTLY TO SOCIOPATH ASSIGNMENT, THIS IS FOR REFERENCE PURPOSE FOR US
  */
 
 import java.util.ArrayList;
